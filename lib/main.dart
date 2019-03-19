@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -16,6 +17,12 @@ class DoughnutsApp extends StatefulWidget {
 class _DoughnutsAppState extends State<DoughnutsApp> {
   int _score = 0;
 
+  final _rightPosition = 20.0;
+  final _textStyle = TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.normal,
+      decoration: TextDecoration.none);
+
   void _increaseScore() {
     setState(() {
       _score++;
@@ -25,13 +32,6 @@ class _DoughnutsAppState extends State<DoughnutsApp> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
-
-    final _rightPosition = 20.0;
-    final _textStyle = TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.normal,
-        decoration: TextDecoration.none);
-
 //    set size
     var _h = (size) => ScreenUtil().setHeight(size);
 
@@ -60,16 +60,16 @@ class _DoughnutsAppState extends State<DoughnutsApp> {
             ),
             Positioned(
               top: _h(373),
-              child: Image(
-                image: AssetImage("assets/donuts.png"),
+              child: SvgPicture.asset(
+                'assets/svg/doughnuts.svg',
                 height: _h(156),
               ),
             ),
             Positioned(
               top: _h(840),
               child: GestureDetector(
-                child: Image(
-                  image: AssetImage("assets/eggs_ant.png"),
+                child: SvgPicture.asset(
+                  'assets/svg/ant.svg',
                   height: _h(76),
                 ),
                 onTap: _increaseScore,
