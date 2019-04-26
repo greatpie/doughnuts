@@ -1,10 +1,8 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:ui';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lottie_flutter/lottie_flutter.dart';
+import 'lottie.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 void main() {
@@ -28,17 +26,17 @@ class _DoughnutsAppState extends State<DoughnutsApp>
       fontWeight: FontWeight.normal,
       decoration: TextDecoration.none);
 
-  LottieComposition _composition;
   String _assetName;
+  String _animationJson;
   AnimationController _controller;
-  bool _repeat;
+
 
   @override
   initState() {
     super.initState();
 
-    _repeat = false;
     _assetName = 'assets/animation/ant.json';
+
     _controller = new AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -46,9 +44,9 @@ class _DoughnutsAppState extends State<DoughnutsApp>
     _controller.addListener(() => setState(() {}));
     _controller.repeat();
 
-    loadAsset(_assetName).then((LottieComposition composition) {
+    rootBundle.loadString(_assetName).then((String json) {
       setState(() {
-        _composition = composition;
+        _animationJson = json;
       });
     });
   }
@@ -57,16 +55,6 @@ class _DoughnutsAppState extends State<DoughnutsApp>
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }
-
-  void _loadButtonPressed(String assetName) {
-    loadAsset(assetName).then((LottieComposition composition) {
-      setState(() {
-        _assetName = assetName;
-        _composition = composition;
-        _controller.reset();
-      });
-    });
   }
 
   void _increaseScore() {
@@ -116,9 +104,10 @@ class _DoughnutsAppState extends State<DoughnutsApp>
               top: _h(840),
               child: GestureDetector(
                 child: Lottie(
-                  composition: _composition,
-                  size: Size(200.0, 200.0),
+                  lottieAnimation: ui.LottieAnimation(_animationJson),
                   controller: _controller,
+                  width: 200,
+                  height: 200,
                 ),
                 onTap: _increaseScore,
               ),
@@ -128,11 +117,4 @@ class _DoughnutsAppState extends State<DoughnutsApp>
       ),
     );
   }
-}
-
-Future<LottieComposition> loadAsset(String assetName) async {
-  return await rootBundle
-      .loadString(assetName)
-      .then<Map<String, dynamic>>((String data) => json.decode(data))
-      .then((Map<String, dynamic> map) => new LottieComposition.fromMap(map));
 }
