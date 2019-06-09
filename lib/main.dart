@@ -21,6 +21,7 @@ class DoughnutsApp extends StatefulWidget {
 
 class _DoughnutsAppState extends State<DoughnutsApp>
     with SingleTickerProviderStateMixin {
+      
   int _score = 0;
   final _rightPosition = 20.0;
   final _textStyle = TextStyle(
@@ -31,18 +32,19 @@ class _DoughnutsAppState extends State<DoughnutsApp>
   LottieComposition _composition;
   String _assetName;
   AnimationController _controller;
-  bool _repeat;
+
 
   @override
   initState() {
     super.initState();
 
-    _repeat = false;
+
     _assetName = 'assets/animation/ant.json';
     _controller = new AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
+
     _controller.addListener(() => setState(() {}));
     _controller.repeat();
 
@@ -57,16 +59,6 @@ class _DoughnutsAppState extends State<DoughnutsApp>
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }
-
-  void _loadButtonPressed(String assetName) {
-    loadAsset(assetName).then((LottieComposition composition) {
-      setState(() {
-        _assetName = assetName;
-        _composition = composition;
-        _controller.reset();
-      });
-    });
   }
 
   void _increaseScore() {
